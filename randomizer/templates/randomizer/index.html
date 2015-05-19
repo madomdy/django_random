@@ -1,0 +1,12 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'polls/style.css' %}" />
+
+<h3> Generate Random </h3>
+<form action='randomizer' method="post">
+{% csrf_token %}
+{% for choice in choices %}
+	<input type="radio" name="radio_choice" id = "radio_choice{{ forloop.counter }}"/>
+	<label for = "radio_choice{{ forloop.counter }}"> {{ choice }} {{ forloop.counter }}</label><br/>
+{% endfor %}
+<input type="submit" value="Get it!"/>
+</form>
