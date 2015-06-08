@@ -1,12 +1,39 @@
-<h1>{{ question.question_text }}</h1>
+{% load staticfiles %}
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<div>
+    <p><h3> Information </h3></p>
+    <p> id: {{ object.id }} </p>
+    <p> Name / Title: {{ object.name }} </p>
+    <p> Creation Time: {{ object.creation_time }} </p>
+    <p> Result Time: {{ object.result_time }} </p>
+    <p> Query: 
+      <p>
+      <textarea name="string_form" cols="60" rows="5" id="string_form" maxlength="1900" readonly>
+        {{ object.query_text }} 
+      </textarea>
+      </p>
+    </p>
+    
+    <p><h3> Result </h3></p>
+    <p> Remaining time: <text id="countdown_holder"></text> </p>
+    <p> Generated random: <text id="generated_random"></text> </p>
+    
+    <p><h3> Let me know the result </h3></p>
+</div>
 
-<form action="{% url 'polls:vote' question.id %}" method="post">
-{% csrf_token %}
-{% for choice in question.choice_set.all %}
-    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
-    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br />
-{% endfor %}
-<input type="submit" value="Vote" />
-</form>
+<script src="{% static 'randomizer/jquery.js' %}"></script>
+<script src="{% static 'randomizer/countdown.js' %}"></script>
+<script src="{% static 'randomizer/detail.js' %}"></script>
+
+<script>
+  var targetDate = parse_result_date(String({{ object.result_time.year }}), String({{ object.result_time.month }}),
+    String({{ object.result_time.day }}), String({{ object.result_time.hour }}), String({{ object.result_time.minute }}));
+  var clock = document.getElementById("countdown_holder");
+  var generated_random = {{ object.result }};
+  if (targetDate >= new Date()) {
+    clock.innerHTML = countdown(targetDate).toString();
+  } else {
+    clock.innerHTML = "random is generated";
+    document.getElementById("generated_random").innerHTML = generated_random;
+  }
+</script>

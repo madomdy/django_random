@@ -12,6 +12,22 @@ class Query(models.Model):
     result = models.CharField(max_length = 2000)
     def __unicode__(self):
         return 'name: {0}, type: {1}, result_time: {2}'.format(self.name, self.query_type, str(self.result_time))
+    
+    @staticmethod
+    def implement_random(queryType, *a):
+        if queryType == 'i':
+            fromNumb, toNumb = a[0], a[1]
+            return random.randint(fromNumb, toNumb)
+        elif queryType == 's':
+            strings = a[0].split('\n')
+            return strings[random.randint(0, len(strings)-1)]
+        elif queryType == 'r':
+            fromNumb, toNumb, accuracy = a[0], a[1], a[2]
+            curRand = random.uniform(fromNumb, toNumb)
+            return round(curRand, accuracy)
+        elif queryType == 'b':
+            return 1 == random.randint(0, 1)
+
     @staticmethod
     def realize_random(queryType, queryText):
         queryType = queryType[-1]
@@ -26,9 +42,9 @@ class Query(models.Model):
             fromNumb, toNumb, accuracy = (float(x) for x in queryText.split())
             curRand = random.uniform(fromNumb, toNumb)
             return round(curRandom, accuracy)
+    
     def new_query():
         pass
-
 
     def implement_query(self, id_query):
         q = Query.objects.get(id = id_query)
