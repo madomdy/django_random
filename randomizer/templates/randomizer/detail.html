@@ -1,25 +1,38 @@
 {% load staticfiles %}
 
-<div>
+<link rel="stylesheet" type="text/css" href="{% static 'randomizer/bootstrap/css/bootstrap.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'randomizer/style.css' %}" />
+
+<body>
+
+{% include "randomizer/header.html" %}
+
+<div class="container">
     <p><h3> Information </h3></p>
-    <p> id: {{ object.id }} </p>
-    <p> Name / Title: {{ object.name }} </p>
-    <p> Creation Time: {{ object.creation_time }} </p>
-    <p> Result Time: {{ object.result_time }} </p>
-    <p> Query: 
-      <p>
-      <textarea name="string_form" cols="60" rows="5" id="string_form" maxlength="1900" readonly>
-        {{ object.query_text }} 
-      </textarea>
-      </p>
-    </p>
-    
+    <div class="query_params">
+      <p> <strong>id:</strong> {{ object.id }} </p>
+      <p> <strong>Name / Title:</strong> {{ object.name }} </p>
+      <p> <strong>Creation Time:</strong> {{ object.creation_time }} </p>
+      <p> <strong>Result Time:</strong> {{ object.result_time }} </p>
+        {% if object.query_type == 's' %}
+          <p> <strong>Query: string from</strong> <p>
+          <textarea name="string_form" cols="60" rows="5" id="string_form" maxlength="1900" readonly>{{ object.query_text }}
+          </textarea></p>
+          </p>
+        {% else %}
+          <p> <strong>Query:</strong> {{ object.query_text }}</p>
+        {% endif %}
+    </div>
     <p><h3> Result </h3></p>
-    <p> Remaining time: <text id="countdown_holder"></text> </p>
-    <p> Generated random: <text id="generated_random"></text> </p>
+    <div class="query_params">
+      <p> <strong>Remaining time:</strong> <text id="countdown_holder"></text> </p>
+      <p> <strong>Generated random:</strong> <text id="generated_random"></text> </p>
+    </div>
     
     <p><h3> Let me know the result </h3></p>
 </div>
+
+</body>
 
 <script src="{% static 'randomizer/jquery.js' %}"></script>
 <script src="{% static 'randomizer/countdown.js' %}"></script>
@@ -29,7 +42,8 @@
   var targetDate = parse_result_date(String({{ object.result_time.year }}), String({{ object.result_time.month }}),
     String({{ object.result_time.day }}), String({{ object.result_time.hour }}), String({{ object.result_time.minute }}));
   var clock = document.getElementById("countdown_holder");
-  var generated_random = {{ object.result }};
+  var generated_random = "{{ object.result }}";
+  //alert(String(generated_random));
   if (targetDate >= new Date()) {
     clock.innerHTML = countdown(targetDate).toString();
   } else {

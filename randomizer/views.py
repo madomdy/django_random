@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.utils import timezone
 import datetime
@@ -34,7 +34,7 @@ def new_query(request):
     elif typeChoice == 's':
         stringForm = request.POST.get('string_form')
         resultQuery = Query.implement_random(typeChoice, stringForm)
-        queryText = "string from " + "\n".join(stringForm.split('\n'))
+        queryText = "\n".join(stringForm.split('\n'))
     elif typeChoice == 'r':
         fromNumber, toNumber, accur = (float(request.POST.get('real_from_number')),
             float(request.POST.get('real_to_number')), int(request.POST.get('real_accur')))
@@ -50,8 +50,9 @@ def new_query(request):
     # newQuery = Query(name = "nameChoice", timezone.now(), timezone.now(), "passwordChoice", "i",
     #   "some query text", "resultQuery")
     newQuery.save()
-    return show_query(request, newQuery.id)
-    # return HttpResponse(" ".join(request.body.split('&')))
+    # return show_query(request, newQuery.id)
+    # return HttpResponse(resultQuery)
+    return redirect('/id' + str(newQuery.id))
 
 def show_query(request, query_id):
     selectedQuery = Query.objects.get(pk = query_id)
