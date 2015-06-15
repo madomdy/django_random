@@ -1,7 +1,20 @@
+
 <div class="navbar" style="padding-left: 20%; padding-right: 20%;">
-  <ul class="nav nav-justified">
-    <li><a href="index.html" data-toggle="collapse" data-target="#one">create query</a></li>
-    <li><a href="#" data-toggle="collapse" data-target="#two">database</a></li>
-    <li><a href="#" data-toggle="collapse" data-target="#three">learn more</a></li>
-  </ul>
+	<ul class="nav nav-justified">
+		<li><a href="index.html" data-toggle="collapse" data-target="#one">create query</a></li>
+		<li><a href="#" data-toggle="collapse" data-target="#two">database</a></li>
+		<li><a href="#" data-toggle="collapse" data-target="#three">learn more</a></li>
+	</ul>
 </div>
+<div class="pull-right" style="padding-left: 5%; padding-right: 5%;">
+	<form>
+		<input name="id_search" id="id_search" type="number" placeholder="search by id" onkeydown="if (event.keyCode == 13) { show_id(); return false; }"/>
+	</form>
+</div>
+
+<script>
+	function show_id() {
+		to_id = document.getElementById("id_search").value;
+		window.location.replace("id" + to_id);
+	}
+</script>

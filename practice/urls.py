@@ -6,8 +6,9 @@ urlpatterns = patterns('',
     # url(r'^$', 'practice.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
     url(r'^$', include('randomizer.urls', namespace = "randomizer")),
+    url(r'index.html', include('randomizer.urls', namespace = "randomizer")),
     url(r'^randomizer/', include('randomizer.urls', namespace = "randomizer")),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^id', include('randomizer.urls', namespace = "randomizer")),
-    url(r'^db', include('randomizer.urls', namespace = "randomizer"))
+    url(r'^db', include('randomizer.urls', namespace = "randomizer")),
 )

@@ -33,7 +33,7 @@ def new_query(request):
         queryText = "integer from " + str(fromNumber) + " to " + str(toNumber)
     elif typeChoice == 's':
         stringForm = request.POST.get('string_form')
-        resultQuery = Query.implement_random(typeChoice, stringForm)
+        resultQuery = Query.implement_random(typeChoice, stringForm).strip()
         queryText = "\n".join(stringForm.split('\n'))
     elif typeChoice == 'r':
         fromNumber, toNumber, accur = (float(request.POST.get('real_from_number')),
