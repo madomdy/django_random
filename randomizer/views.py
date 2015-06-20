@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.utils import timezone
+from django.http import JsonResponse
 import datetime
 
 # Create your views here.
@@ -57,3 +58,28 @@ def new_query(request):
 def show_query(request, query_id):
     selectedQuery = Query.objects.get(pk = query_id)
     return render(request, 'randomizer/detail.html', {'object' : selectedQuery})
+
+def show_history(request, amountToDisplay = 20):
+    objCount = Query.objects.count()
+    return render(request, 'randomizer/history.html', {'objects' : [Query.objects.get(pk = x) for x in range(objCount, objCount - amountToDisplay - 1, -1)]})
+    # return HttpResponse('yo-yo')
+
+def show_learn(request):
+    return render(request, 'randomizer/learn.html')
+
+def ajax_history(request, amountToLoad = 20):
+    mylast = int(request.GET['last'])
+    myJSON = {}
+    it = 0
+    for i in range(mylast - amountToLoad, mylast):
+        q = Query.objects.get(pk = i)
+        myJSON[it] = {
+            'id': q.id,
+            'name': q.name,
+            'creation_time': q.creation_time,
+            'query_text': q.query_text,
+            'result_time':q.result_time,
+        }
+        it += 1
+    return JsonResponse(myJSON)
+    # return JsonResponse({ 0: str(len(arg)), 1: " ".join(list(str(x) for x in arg[0].__dict__))})
