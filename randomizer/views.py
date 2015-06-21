@@ -67,18 +67,28 @@ def show_history(request, amountToDisplay = 20):
 def show_learn(request):
     return render(request, 'randomizer/learn.html')
 
+def format_date_as_jinja(datetime):
+    date, time = datetime.strftime("%B %d, %Y"), datetime.strftime("%I:%M%p")
+    if time[0] == '0':
+        time = time[1:]
+    end = time[-2:].lower()
+    end = end[0] + '.' + end[1] + '.'
+    return date + ', ' + time[:-2] + ' ' + end
+
 def ajax_history(request, amountToLoad = 20):
     mylast = int(request.GET['last'])
     myJSON = {}
     it = 0
-    for i in range(mylast - amountToLoad, mylast):
+    for i in range(mylast - 1, mylast - amountToLoad - 1, -1):
+        if i == 0:
+            break
         q = Query.objects.get(pk = i)
         myJSON[it] = {
             'id': q.id,
             'name': q.name,
-            'creation_time': q.creation_time,
+            'creation_time': format_date_as_jinja(q.creation_time),
             'query_text': q.query_text,
-            'result_time':q.result_time,
+            'result_time': format_date_as_jinja(q.result_time),
         }
         it += 1
     return JsonResponse(myJSON)

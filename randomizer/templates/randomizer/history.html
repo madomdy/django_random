@@ -5,7 +5,7 @@
 
 <body>
 	{% include "randomizer/header.html" %}
-	<div class="container">
+	<div class="container" style="padding-bottom:20px;">
 		<table class="table" id="history_table">
 			<thead><tr>
 				<th>id</th>
@@ -24,7 +24,6 @@
 				</tr>
 			{% endfor %}
 		</table>
-		<input type="number" id="temp_input">
 		<button class="btn btn-primary center-block" type="button" onclick="get_more_obj()">Load more</button>
 	</div>
 </body>
@@ -45,7 +44,7 @@
 	}
 	function load_more_obj(newHistory) {
 		var table = document.getElementById("history_table");
-		for (key = 19; key >= 0; --key) {
+		for (key = 0; key < 20; ++key) {
 			var out = "<td>" + newHistory[key]['id'] + "</td>" +
 					"<td>" + newHistory[key]['name'] + "</td>" + 
 					"<td>" + newHistory[key]['creation_time'] + "</td>" + 
