@@ -1,17 +1,13 @@
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
-import randomizer
+from django.conf.urls import url
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'practice.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-    url(r'^$', include('randomizer.urls', namespace = "randomizer")),
-    url(r'index.html', include('randomizer.urls', namespace = "randomizer")),
-    url(r'^learn', randomizer.views.show_learn, name="show_learn"),
-    url(r'^history', randomizer.views.show_history, name="show_history"),
-    url(r'^randomizer/', include('randomizer.urls', namespace = "randomizer")),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^id', include('randomizer.urls', namespace = "randomizer")),
-    url(r'^db', include('randomizer.urls', namespace = "randomizer")),
-)
+from . import views
+
+urlpatterns = [
+        url(r'^$', views.index, name = 'index'),
+        url(r'index.html', views.index, name = 'index'),
+        url(r'history.html', views.show_history, name="show_history"),
+        url(r'learn.html', views.show_learn, name="show_learn"),
+        url(r'id(?P<query_id>[0-9]+)', views.show_query, name = 'show_query'),
+        url(r'ajax_history', views.ajax_history, name = 'ajax_history'),
+        url(r'new_query', views.new_query, name = 'new_query'),
+]

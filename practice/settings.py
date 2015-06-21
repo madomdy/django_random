@@ -24,8 +24,11 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+TEMPLATE_DIRS = [
+    os.path.join(BASE_DIR, 'practice/templates'),
+]
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -36,7 +39,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'randomizer',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -86,5 +88,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "practice/static"),
+)
 
 STATIC_URL = '/static/'

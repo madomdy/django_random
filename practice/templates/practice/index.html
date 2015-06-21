@@ -1,0 +1,91 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'practice/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'practice/bootstrap/css/bootstrap.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'practice/jquery.datetimepicker.css' %}"/ >
+
+<body>
+
+{% include "practice/header.html" %}
+
+<div class="container">
+	<form action='randomizer/new_query' method="post" onsubmit="return input_validation()">
+	{% csrf_token %}
+
+	<input type="hidden" name="creation_time" id="creation_time"/>
+	<div>
+		<p><h3> Generate Random </h3></p>
+		<div class="query_params">
+			<input type="radio" name="radio_choice"	id="radio_choice_int" value="i" checked="true"/>
+			<label class="query_type" for="radio_choice_int"> integer </label>
+			<p class = "query_info">
+				from 
+				<input type="number" name="integer_from_number" value="1" id="integer_from_number" />
+				to
+				<input type="number" name="integer_to_number" value="100" id="integer_to_number" />
+			</p>
+			
+			<input type="radio" name="radio_choice"	value="s" id="radio_choice_string"/>
+			<label class="query_type" for="radio_choice_string"> string from </label>
+			<p class = "query_info">
+				<textarea name="string_form" cols="60" rows="5" id="string_form" maxlength="1900"></textarea>
+			</p>
+
+			<input type="radio" name="radio_choice"	value="r" id="radio_choice_real"/>
+			<label class="query_type" for="radio_choice_real"> real number </label>
+			<p class="query_info">
+				from 
+				<input type="number" step="any" name="real_from_number" value="1" id="real_from_number" />
+				to
+				<input type="number" step="any" name="real_to_number" value="100" id="real_to_number"/>
+				with accuracy
+				<input type="number" name="real_accur" value="2" id="real_accur" min="0" max="10"/>
+			</p>
+
+			<input type="radio" name="radio_choice"	value="b" id="radio_choice_bool"/>
+			<label class="query_type" 	for="radio_choice_bool"> true or false </label>
+		</div>
+		<p><h3> Optional Settings </h3></p>
+		<div class="query_params">
+			<p>
+				Name / Title:
+				<input type="text" name="query_name" value="my first query"/>
+			</p>
+			<p>
+				Generation time:
+				<input type="radio" name="radio_generation_time" value="now" checked="true" onchange="change_time_mode(false)" id="radio_now"/>
+				<label for="radio_now"> now </label>
+				<input type="radio" name="radio_generation_time" value="later" onchange="change_time_mode(true)" id="radio_later"/>
+				<label for="radio_later"> later </label>
+				<input name="generation_time" id="generation_time" type="text" disabled>
+			</p>
+			<p> 
+				Set password:
+				<input type="text" name="query_password"/>
+			</p>
+		</div>
+	</div>
+
+	{% comment %}
+	{% for choice in choices %}
+		<input type="radio" name="radio_choice" id = "radio_choice{{ forloop.counter }}" 
+		value="{{ forloop.counter }}"/>
+		<label for = "radio_choice{{ forloop.counter }}"> {{ choice }} </label><br/>
+
+	{% endfor %}
+	{% endcomment %}
+
+	<button class="btn btn-primary" type="submit">Get it!</button>
+	</form>
+</div>
+</body>
+
+<script src="{% static 'practice/jquery.js' %}"></script>
+<script src="{% static 'practice/jquery.datetimepicker.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'practice/noty/jquery.noty.js' %}" ></script>
+<script type="text/javascript" src="{% static 'practice/noty/layouts/topRight.js' %}"></script>
+<script type="text/javascript" src="{% static 'practice/noty/themes/relax.js' %}"></script>
+<script type="text/javascript" src="{% static 'practice/noty/themes/default.js' %}"></script>
+
+<script src="{% static 'practice/main.js' %}"></script>

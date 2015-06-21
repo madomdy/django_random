@@ -1,0 +1,11 @@
+p.query_info {
+	margin-left: 50px;
+}
+
+label.query_type {
+	font-size: 1.15em;
+}
+
+div.query_params {
+	margin-left: 50px;
+}
