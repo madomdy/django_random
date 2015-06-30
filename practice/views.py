@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound, JsonResponse
 from django.utils import timezone
-from django.http import JsonResponse
-import datetime
+import datetime, sha
 
 # Create your views here.
 
@@ -22,11 +21,11 @@ def new_query(request):
     typeChoice = request.POST.get('radio_choice')
     nameChoice = request.POST.get('query_name')
     passwordChoice = request.POST.get('query_password')
-    creationTime = datetime.datetime(*parse_time(request.POST.get('creation_time')))
+    creationTime = datetime.datetime(*parse_time(request.POST.get('creation_time_utc')))
     if request.POST.get('radio_generation_time') == 'now':
         timeChoice = creationTime
     else:
-        timeChoice = datetime.datetime(*parse_time(request.POST.get('generation_time')))
+        timeChoice = datetime.datetime(*parse_time(request.POST.get('generation_time_utc')))
     if typeChoice == 'i':
         fromNumber, toNumber = (int(request.POST.get('integer_from_number')),
          int(request.POST.get('integer_to_number')))
@@ -46,49 +45,74 @@ def new_query(request):
         queryText = "true or false"
 
     newQuery = Query(name = nameChoice, creation_time = creationTime, result_time = timeChoice,
-     password = passwordChoice, query_type = typeChoice, query_text = queryText, 
+     password = "", query_type = typeChoice, query_text = queryText, 
      result = resultQuery)
-    # newQuery = Query(name = "nameChoice", timezone.now(), timezone.now(), "passwordChoice", "i",
-    #   "some query text", "resultQuery")
     newQuery.save()
-    # return show_query(request, newQuery.id)
-    # return HttpResponse(resultQuery)
+    if passwordChoice:
+        newQuery.password = str(sha.new(str(newQuery.id) + passwordChoice).hexdigest())
+        newQuery.save()
     return redirect('/id' + str(newQuery.id))
+    # return HttpResponse(resultQuery)
+    # return HttpResponse(request.POST.get('creation_time_utc'))
 
-def show_query(request, query_id):
+def show_query(request, query_id, truePass = False):
     selectedQuery = Query.objects.get(pk = query_id)
-    return render(request, 'practice/detail.html', {'object' : selectedQuery})
+    if selectedQuery.password and not truePass:
+        return render(request, 'practice/password.html')
+    else:
+        if selectedQuery.result_time > timezone.now():
+            selectedQuery.result = "It's coming"
+        return render(request, 'practice/detail.html', {'object' : selectedQuery})
 
-def show_history(request, amountToDisplay = 20):
+def show_history(request):
     objCount = Query.objects.count()
-    return render(request, 'practice/history.html', {'objects' : [Query.objects.get(pk = x) for x in range(objCount, objCount - amountToDisplay - 1, -1)]})
+    return render(request, 'practice/history.html', {'count': objCount})
 
 def show_learn(request):
     return render(request, 'practice/learn.html')
 
-def format_date_as_jinja(datetime):
-    date, time = datetime.strftime("%B %d, %Y"), datetime.strftime("%I:%M%p")
-    if time[0] == '0':
-        time = time[1:]
-    end = time[-2:].lower()
-    end = end[0] + '.' + end[1] + '.'
-    return date + ', ' + time[:-2] + ' ' + end
+def format_date(datetime):
+    return datetime.strftime("%Y/%m/%d %H:%M")
 
-def ajax_history(request, amountToLoad = 20):
-    mylast = int(request.GET['last'])
+def ajax_history(request, amountToLoad = 20, textMaxLen = 30):
+    last = int(request.GET['last']) - 1
     myJSON = {}
     it = 0
-    for i in range(mylast - 1, mylast - amountToLoad - 1, -1):
-        if i == 0:
+    while amountToLoad > 0:
+        if last == 0:
             break
-        q = Query.objects.get(pk = i)
-        myJSON[it] = {
-            'id': q.id,
-            'name': q.name,
-            'creation_time': format_date_as_jinja(q.creation_time),
-            'query_text': q.query_text,
-            'result_time': format_date_as_jinja(q.result_time),
-        }
-        it += 1
+        q = Query.objects.get(pk = last)
+        last -= 1
+        if not q.password:
+            amountToLoad -= 1
+            myJSON[it] = {
+                'id': q.id,
+                'name': q.name,
+                'creation_time': format_date(q.creation_time),
+                'query_text': q.query_text,
+                'result_time': format_date(q.result_time),
+            }
+            if len(q.query_text) > textMaxLen:
+                myJSON[it]['query_text'] = q.query_text[:textMaxLen] + '...'
+            if len(q.name) > textMaxLen:
+                myJSON[it]['name'] = q.name[:textMaxLen] + '...'
+            it += 1
     return JsonResponse(myJSON)
     # return JsonResponse({ 0: str(len(arg)), 1: " ".join(list(str(x) for x in arg[0].__dict__))})
+
+def ajax_pass(request):
+    pas = str(sha.new(str(request.GET['id']) + str(request.GET['p'])).hexdigest())
+    return JsonResponse({'hashkey': pas})
+
+def ajax_result(request):
+    selectedQuery = Query.objects.get(pk = request.GET['id'])
+    if selectedQuery.result_time > timezone.now():
+        selectedQuery.result = "It's coming"
+    result = selectedQuery.result
+    return JsonResponse({'result': result})
+
+def show_hashkey(request, hashkey):
+    for q in Query.objects.all():
+        if hashkey == q.password:
+            return show_query(request, q.id, truePass = True)
+    return HttpResponseNotFound('<h1>Invalid hashkey</h1>')

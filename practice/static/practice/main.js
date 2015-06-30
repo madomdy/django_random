@@ -1,12 +1,7 @@
-$('#generation_time').datetimepicker({
-//  format:'DD.MM.YYYY h:mm a',
-    // formatTime:'h:m',
-    // defaultTime:'05:00',
-    // defaultScreen = false,
-    //formatDate:'DD.MM.YYYY'
-});
-
-$('#generation_time').val(get_time(10));
+var parse_date_to_client = function(year, month, day, hour, minute) {
+  d = new Date(Date.UTC(year, --month, day, hour, minute));
+  return d;
+}
 
 function get_time(deltaMin) {
     var curTime = new Date();
@@ -118,39 +113,14 @@ function input_validation() {
         }
     }
 
-    $('#creation_time').val(get_time(0));
+    var now = new Date(); 
+    var now_utc = new Date(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),  
+        now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds());
+    $('#creation_time_utc').val(date_formatting(now_utc));
+    
+    var gen_time = new Date($('#generation_time').val());
+    var gen_utc = new Date(gen_time.getUTCFullYear(), gen_time.getUTCMonth(), gen_time.getUTCDate(),  
+        gen_time.getUTCHours(), gen_time.getUTCMinutes(), gen_time.getUTCSeconds());
+    $('#generation_time_utc').val(date_formatting(gen_utc));
     return true;
 };
-
-/*
-var disable_all = function() {
-    $('#string_textarea').removeAttr('required');
-    $('#integer_from_number').removeAttr('required');
-    $('#integer_to_number').removeAttr('required');
-    $('#real_from_number').removeAttr('required');
-    $('#real_to_number').removeAttr('required');
-    $('#accur').removeAttr('required');
-};
-
-$('#radio_choice_string').change( function() {
-    disable_all();
-    $('#string_textarea').attr('required', '');
-});
-
-$('#radio_choice_int').change( function() {
-    disable_all();
-    $('#integer_from_number').attr('required', '');
-    $('#integer_to_number').attr('required', '');
-});
-
-$('#radio_choice_real').change( function() {
-    disable_all();
-    $('#real_from_number').attr('required', '');
-    $('#real_to_number').attr('required', '');
-    $('#real_accur').attr('required', '');
-});
-
-$('#radio_choice_bool').change( function() {
-    disable_all();
-});
-*/

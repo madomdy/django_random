@@ -12,8 +12,8 @@
     <div class="query_params">
       <p> <strong>id:</strong> {{ object.id }} </p>
       <p> <strong>Name / Title:</strong> {{ object.name }} </p>
-      <p> <strong>Creation Time:</strong> {{ object.creation_time }} </p>
-      <p> <strong>Result Time:</strong> {{ object.result_time }} </p>
+      <p> <strong>Creation Time:</strong> <text id="creation_time"> {{ object.creation_time }} </text></p>
+      <p> <strong>Result Time:</strong> <text id="result_time"> {{ object.result_time }} </text></p>
         {% if object.query_type == 's' %}
           <p> <strong>Query:</strong> string from <p>
           <textarea name="string_form" cols="60" rows="5" id="string_form" maxlength="1900" readonly>{{ object.query_text }}
@@ -43,22 +43,35 @@
       <button class="btn btn-primary" type="submit">Subscribe!</button>
     </form>
 </div>
-
 </body>
 
 <script src="{% static 'practice/jquery.js' %}"></script>
 <script src="{% static 'practice/countdown.js' %}"></script>
 <script src="{% static 'practice/detail.js' %}"></script>
+<script src="{% static 'practice/main.js' %}"></script>
 
 <script>
-  var targetDate = parse_result_date(String({{ object.result_time.year }}), String({{ object.result_time.month }}),
-    String({{ object.result_time.day }}), String({{ object.result_time.hour }}), String({{ object.result_time.minute }}));
+  var creation_time = parse_date_to_client(String({{ object.creation_time.year }}), String({{ object.creation_time.month }}), String({{ object.creation_time.day }}), String({{ object.creation_time.hour }}), String({{ object.creation_time.minute }}));
+  var result_time = parse_date_to_client(String({{ object.result_time.year }}), String({{ object.result_time.month }}), String({{ object.result_time.day }}), String({{ object.result_time.hour }}), String({{ object.result_time.minute }}));
+  var now = new Date((new Date()).toString());
   
+  $('#creation_time').html(date_formatting(creation_time));
+  $('#result_time').html(date_formatting(result_time));
+
   var clock = document.getElementById("countdown_holder");
   var generated_random = "{{ object.result }}";
-  //alert(generated_random);
-  if (targetDate >= new Date()) {
-    clock.innerHTML = countdown(targetDate).toString();
+  
+  if (result_time > now) {
+    clock.innerHTML = countdown(result_time).toString();
+    var countdown_timer = setInterval(function() {
+      if (result_time >= new Date()) {
+        document.getElementById("generated_random").innerHTML = generated_random;
+        clock.innerHTML = countdown(result_time).toString();
+      } else {
+        check_result(window.location.href.match(/id\d+/).toString().substring(2));
+        clearInterval(countdown_timer);
+      }
+    }, 1000);
   } else {
     clock.innerHTML = "random is generated";
     document.getElementById("generated_random").innerHTML = generated_random;
