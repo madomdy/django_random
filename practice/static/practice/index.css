@@ -1,79 +1,90 @@
-#top_menu{
-    background-color:#92D36E;
-    width:360px;
-    height:30px;
-    margin:auto;
-    border:1px solid black;
-    border-collapse: collapse;
+body {
+    background-color:#FFF3F3;
 }
-#create,#history,#about{
-     border:1px solid black;
-     text-align:center;
+#cont{
+    height:60em;
 }
-/*#left_menu{
-    border:1px solid black;
-    border-collapse: collapse;
-    width:200px;
-    height:200px;
-    margin-top:-302px;
-    margin-left:318px;
+.boxes {
+    width:30%;
+    border-radius: 25px;
+    border: 2px solid #000000;
+    position:relative;
+    padding:0.5%;
+    font-size:10pt;
+    padding-top:0%;
+    padding-bottom:0%;
+}
+#Int_box {
+    left:15%;
     float:left;
-}*/
-#radio_choice_int, #radio_choice_string,#radio_choice_real,#radio_choice_bool{
-    display:none;
+    background-color:#FF4D4D;
 }
-#int{
-    height:25px;
+#String_box {
+    float:right;
+    right:15%;
 }
-#string{
-    height:25px;
+#Real_box {
+    margin-top:5%;
+    float:left;
+    left:15%;
+    clear:left;
 }
-#real{
-    height:25px;
+#Bool_box {
+    margin-top:3%;
+    float:right;
+    right:15%;
+    clear:right;
 }
-#tf{
-    height:25px;
+#optional_settings {
+	background-color:#FFF3F3;
+	position:fixed;
+    bottom:0%;
+    width:100%;
+    border-top: 5px solid #000;
 }
-#integer,#string_from,#real_number,#true_or_false{
-   border:1px solid black;
-   background-color:#92D36E;
-   font-size:22px;
+#get_it{
+    width:100px;
+    margin-top:5px;
 }
-.query_params {
-    background-color: #92D36E;
-    width:500px;
-    margin-left:auto;
-    margin-right:auto;
-    padding: 3px;
-    border:1px solid black;
+hr{
+    background-color:black;
+    height:5px;
 }
-#filling1 {
-    margin-top:50px;
-}
-#optional_settings{
-}
-#line{
-    margin-top:50px;
-}
-#p1{
-    margin-top:50px;
-    margin-left:30px;
+.p{
     text-align:justify;
 }
-#p2{
-    text-align:justify;
-    margin:10px;
-}
-#h3{
+#textbox{
     text-align:center;
 }
-p{
-    margin:10px;
+.relocate{
+	position:relative;
+	margin-top:-3%;
+	line-height:0%;
 }
-#ps{
-  display:none;
+.optional_settings_part {
+	width: 33%;
+	text-align: center;
 }
-#for_tf{
-    text-align:justify;
-    margin-left:10px;
+#optional_settings_name {
+	float:left;
+}
+#optional_settings_password {
+	float: right;
+}
+#optional_settings_time {
+	 display: inline-block;
+}
+button {
+    background: #FF4D4D;
+    color: #fff;
+    height: 30px;
+    margin: 5px auto;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+    border: 0;
+    transition: all 0.3s ease 0s;
+}
+button:hover {
+    background: #C60202;
 }

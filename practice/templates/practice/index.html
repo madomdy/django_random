@@ -1,100 +1,109 @@
-<!DOCTYPE html>
-
 {% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'practice/style.css' %}" />
-<link rel="stylesheet" type="text/css" href="{% static 'practice/bootstrap/css/bootstrap.css' %}" />
+
 <link rel="stylesheet" type="text/css" href="{% static 'practice/jquery.datetimepicker.css' %}"/ >
 <link rel="stylesheet" type="text/css" href="{% static 'practice/index.css' %}" />
 
-<body style="background-color:#CBE8BA">
-{% include "practice/header.html" %}
+<body>
+<h1 align="center" style="margin:10px;">SETONFOOT RANDOM</h1>
+<hr />
 
-<div>
-	<table id = "top_menu">
-	    <tr>
-			<td id="create" onmouseenter="onmouseenter_create()" onmouseout="onmousout_create()">Create</td>
-			<td id="history" onmouseenter="onmouseenter_history()" onmouseout="onmousout_history()">History</td>
-			<td id ="about" onmouseenter="onmouseenter_about()" onmouseout="onmousout_about()">About</td>
-	    </tr>
-	</table>
-</div>
-
-<div class="container">
+<div id="cont">
 	<form action='randomizer/new_query' method="post" onsubmit="return input_validation()">
-		{% csrf_token %}
-
+	{% csrf_token %}
 	<input type="hidden" name="creation_time_utc" id="creation_time_utc"/>
 	<input type="hidden" name="generation_time_utc" id="generation_time_utc">
 
-	<!-- <table id="left_menu">
-		<tr id = "integer" onclick="pressed_int()" style="background-color:green" >
-			<td>
-				<input type="radio" name="radio_choice"	id="radio_choice_int" value="i" checked="true"/>
-				<label class="query_type" for="radio_choice_int"> <div id = "int">Integer</div> </label>
-			</td>
-		</tr>
-		<tr id = "string_from" onclick="pressed_string()">
-			<td>
-				<input type="radio" name="radio_choice"	value="s" id="radio_choice_string"/>
-				<label class="query_type" for="radio_choice_string"> <div id = "string">String from </div></label>
-			</td>
-		</tr>
-		<tr id = "real_number" onclick="pressed_real()">
-			<td>
-				<input type="radio" name="radio_choice"	value="r" id="radio_choice_real"/>
-				<label class="query_type" for="radio_choice_real"> <div id = "real">Real number</div> </label>
-			</td>
-		</tr>
-		<tr id = "true_or_false" onclick="pressed_tf()">
-			<td>
-				<input type="radio" name="radio_choice"	value="b" id="radio_choice_bool"/>
-				<label class="query_type" 	for="radio_choice_bool"><div id = "tf"> True or false </div></label>
-			</td>
-		</tr>
-	</table> -->
+	<div class="query_params" >
+		<input type="radio" name="radio_choice"	id="radio_choice_int" value="i" checked="true" hidden="true"/>
+		<label class="query_type" for="radio_choice_int">
+			<div id="Int_box" class="boxes" onclick="change_color('Int_box')">
+				<h3>Integer</h3>
+				<div class="relocate"><p>
+					from
+					<input type="number" id="integer_from_number" class = "input_int" name="integer_from_number" value="1" id="integer_from_number"/>
+				</p>
+				<p>
+					to
+					<input type="number" class = "input_int" name="integer_to_number" value="100" id="integer_to_number"/>
+				</p>
+			</div>
+				<p class="p">
+					An integer is a number that can be written without a fractional component. For example, if you type in 'from 1 to 3' you will get 1, 2 or 3 with the same probability for each. 
+        		</p>
+			</div>
+		</label>
+		
+	    <input type="radio" name="radio_choice"	value="s" id="radio_choice_string" hidden="true"/>
+		<label class="query_type" for="radio_choice_string">
+			<div id="String_box" class="boxes" onclick="change_color('String_box')"><h3>String from</h3>
+				<p id="textbox" class = "query_info">
+				<textarea name="string_form" cols="40" rows="5" id="string_form" maxlength="1900"></textarea></p>
+				<p class="p">Here you need to enter a few lines of the text. You will randomly get one of the lines. It will choose one of them with the same probability.
+				</p>
+			</div>
+		</label>
+	
+	    <input type="radio" name="radio_choice"	value="r" id="radio_choice_real" hidden="true"/>
+		<label class="query_type" for="radio_choice_real"> 
+			<div id = "Real_box" class="boxes" onclick="change_color('Real_box')">
+				<h3>Real number</h3>
+				<div class="relocate"><p>
+					from
+					<input type="number" step="any" name="real_from_number" value="1" id="real_from_number" class="input_int" />
+				</p>
+				<p>
+					to
+					<input type="number" step="any" name="real_to_number" value="100" id="real_to_number" class="input_int"/>
+				</p>
+				<p>
+					with accuracy
+					<input type="number" name="real_accur" value="2" id="real_accur"class="input_int" min="0" max="10"/>
+				</p>
+				</div>
+				<p class="p">Real number - is a number that has the fractional part. for example, if you type in 'from 1 to 3 with accuracy 3' you will 				get a number with 3  signs after fractional point: 2,001 or something like this
+				</p>
+				
 
-    <div class="query_params" id = "filling1">
-		<p class = "query_info" id="p1">
-			from 
-			<input type="number" name="integer_from_number" value="1" id="integer_from_number" />
-			to
-			<input type="number" name="integer_to_number" value="100" id="integer_to_number" />
-		</p>
-		<hr id = "line" color="black">
-		<p id="p2">
-			An integer is a number that can be written without a fractional component. For example, if you type in 'from 1 to 3' you will get 1, 2 or 3 with the same probability for each. You can enter the numbers or you can use arrows to choose the number that you need .
-		</p>
+			</div> 
+		</label>
+		
+		<input type="radio" name="radio_choice"	value="b" id="radio_choice_bool" hidden="true"/>
+		<label class="query_type" for="radio_choice_bool">
+			<div id="Bool_box" class="boxes" onclick="change_color('Bool_box')">
+				<h3>Boolean</h3>
+				<p>true or false</p>
+			</div>
+		</label>
+
 	</div>
 		
-	<div class="query_params" id = "optional_settings">
-		<p>
-			<h3 id = "h3"> Optional Settings </h3> 
-		</p>
-		<p>
+	<div id="optional_settings">
+		<h3 align="center" style="margin:10px;">Optional Settings</h3>
+		<div id="optional_settings_name" class="optional_settings_part">
 			Name / Title:
-			<input type="text" name="query_name" value="my first query"/>
-		</p>
-		<p>
+			<br>
+			<input type="text" name="query_name" value="my first query" />
+		</div>
+
+		<div id="optional_settings_time" class="optional_settings_part">
 			Generation time:
+			<br>
 			<input type="radio" name="radio_generation_time" value="now" checked="true" onchange="change_time_mode(false)" id="radio_now"/>
 			<label for="radio_now"> now </label>
 			<input type="radio" name="radio_generation_time" value="later" onchange="change_time_mode(true)" id="radio_later"/>
 			<label for="radio_later"> later </label>
 			<input name="generation_time" id="generation_time" type="text" disabled>
-		</p>
-		<p> 
+		</div>
+
+		<div id="optional_settings_password" class="optional_settings_part">
 			Set password:
+			<br>
 			<input type="text" name="query_password"/>
-		</p>
-		<button class="btn btn-primary center-block" type="submit">Get it!</button>
-	</div>	
+		</div>
+		<button type="submit" id="get_it">Get it!</button>
+	</div>
+	</form>
 </div>
-
-<script>
-	$('#generation_time').datetimepicker();
-	$('#generation_time').val(get_time(10));
-</script>
-
 </body>
 
 <script src="{% static 'practice/jquery.js' %}"></script>
@@ -102,6 +111,10 @@
 <script src="{% static 'practice/main.js' %}"></script>
 <script src="{% static 'practice/index.js' %}"></script>
 
+<script>
+	$('#generation_time').datetimepicker();
+	$('#generation_time').val(get_time(10));
+</script>
 
 <script type="text/javascript" src="{% static 'practice/noty/jquery.noty.js' %}" ></script>
 <script type="text/javascript" src="{% static 'practice/noty/layouts/topRight.js' %}"></script>
