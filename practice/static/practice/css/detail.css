@@ -1,0 +1,28 @@
+#remaining_time_div {
+    width: 20%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.bordered_box {
+    margin: 0 auto;
+    border-radius: 25px;
+    border: 2px solid #000000;
+    position:relative;
+    padding:0.5%;
+    padding-top:0%;
+    padding-bottom:0%;
+}
+
+#result_info {
+    width: 30%;
+}
+
+#subscription {
+    width: 35%;
+    margin-top:3%;
+}
+
+.bordered_box h3 {
+    text-align: center;
+}

@@ -1,12 +1,34 @@
 {% load staticfiles %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'practice/bootstrap/css/bootstrap.css' %}" />
+
+<link rel="stylesheet" type="text/css" href="{% static 'practice/css/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'practice/css/detail.css'%}" />
+<link rel="stylesheet" type="text/css" href="{% static 'practice/css/fountainG.css'%}" />
 
 <body>
+<h1 align="center" style="margin:10px;">SETONFOOT RANDOM</h1>
+<hr />
 
 <div class="container">
-    <p><h3> Information </h3></p>
-    <div class="query_params">
+    <div id="remaining_time_div">
+      <p> <text id="countdown_holder"></text></p>
+      <h3>Result</h3> 
+      <!-- <p> <strong>Generated random:</strong> <text id="generated_random"></text> </p> -->
+
+      <div id="generated_random">
+        <div id="fountainG_1" class="fountainG"></div>
+        <div id="fountainG_2" class="fountainG"></div>
+        <div id="fountainG_3" class="fountainG"></div>
+        <div id="fountainG_4" class="fountainG"></div>
+        <div id="fountainG_5" class="fountainG"></div>
+        <div id="fountainG_6" class="fountainG"></div>
+        <div id="fountainG_7" class="fountainG"></div>
+        <div id="fountainG_8" class="fountainG"></div>
+      </div>
+    </div>
+
+    <div class="bordered_box" id="result_info">
+      <h3> Information </h3>
       <p> <strong>id:</strong> {{ object.id }} </p>
       <p> <strong>Name / Title:</strong> {{ object.name }} </p>
       <p> <strong>Creation Time:</strong> <text id="creation_time"> {{ object.creation_time }} </text></p>
@@ -20,14 +42,10 @@
           <p> <strong>Query:</strong> {{ object.query_text }}</p>
         {% endif %}
     </div>
-    <p><h3> Result </h3></p>
-    <div class="query_params">
-      <p> <strong>Remaining time:</strong> <text id="countdown_holder"></text> </p>
-      <p> <strong>Generated random:</strong> <text id="generated_random"></text> </p>
-    </div>
     
-    <p><h3> Let me know the result </h3></p>
-    <form onsubmit="">
+    <div class="bordered_box" id="subscription">
+      <h3> Let me know the result </h3>
+      <form onsubmit="">
       <div class="query_params">
         <input type="checkbox" name="subscribe" id="email" checked="true">
         <label for="subscribe"> <strong>By e-mail:</strong> </label>
@@ -39,13 +57,15 @@
       </div>
       <button class="btn btn-primary" type="submit">Subscribe!</button>
     </form>
+    </div>
+
 </div>
 </body>
 
-<script src="{% static 'practice/jquery.js' %}"></script>
-<script src="{% static 'practice/countdown.js' %}"></script>
-<script src="{% static 'practice/detail.js' %}"></script>
-<script src="{% static 'practice/main.js' %}"></script>
+<script src="{% static 'practice/js/jquery.js' %}"></script>
+<script src="{% static 'practice/js/countdown.js' %}"></script>
+<script src="{% static 'practice/js/detail.js' %}"></script>
+<script src="{% static 'practice/js/main.js' %}"></script>
 
 <script>
   var creation_time = parse_date_to_client(String({{ object.creation_time.year }}), String({{ object.creation_time.month }}), String({{ object.creation_time.day }}), String({{ object.creation_time.hour }}), String({{ object.creation_time.minute }}));
